@@ -1,0 +1,3 @@
+[submodule "prolog"]
+	path = prolog
+	url = home:/repos/prolog.git

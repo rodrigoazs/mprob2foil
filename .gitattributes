@@ -1,0 +1,4 @@
+data/dependent export-ignore
+data/independent export-ignore
+data/poker.pl export-ignore
+data/poker_pair.pl export-ignore

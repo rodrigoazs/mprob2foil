@@ -1,0 +1,18 @@
+mode(male(+)).
+% mode(female(+)).
+mode(parent(+,+)).
+mode(parent(+,-)).
+mode(parent(-,+)).
+
+base(parent(person,person)).
+base(male(person)).
+base(female(person)).
+base(mother(person,person)).
+base(grandmother(person,person)).
+base(father(person,person)).
+base(male_ancestor(person,person)).
+base(female_ancestor(person,person)).
+
+learn(grandmother/2).
+
+example_mode(balance).
