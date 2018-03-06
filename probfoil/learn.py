@@ -153,14 +153,16 @@ class LearnEntail(object):
         for i, example in zip(to_eval, examples):
             #scores_predict[i] = result.get(Term(functor, *example), 0.0)
             #b = self._data.evaluateRuleEn(rule, example)
+#            with open('log.txt', 'a+') as file:
+#                file.write(str(example)+'\n')
             scores_predict[i] = self._data.evaluateRuleEn(rule, example)
             #a = scores_predict[i]
 #            with open('log.txt', 'a+') as file:
+#                file.write(str(example)+'\n')
 #                if a == b:
 #                    file.write('CORRECT ' + str(a) +' = ' +str(b)+'\n')
 #                else:
 #                    file.write('INCORRECT ' + str(a) +' != ' +str(b)+'\n')
-#                    file.write(str(example)+'\n')
         for i in set_one:
             scores_predict[i] = 1.0
 

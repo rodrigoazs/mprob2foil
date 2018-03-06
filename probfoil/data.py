@@ -2,7 +2,7 @@
 from problog.engine import DefaultEngine
 from problog.logic import Term, Var, Constant, Not
 from problog import get_evaluatable
-
+from .satisfy import *
 
 class DataFile(object):
     """Represents a data file. This is a wrapper around a ProbLog file that offers direct
@@ -96,7 +96,7 @@ class DataFile(object):
 
         knowledge = get_evaluatable().create_from(ground_program)
         return knowledge.evaluate()
-    
+
     def evaluateEn(self, clause):
         n_clause = []
         for i in range(len(clause)):
@@ -104,11 +104,11 @@ class DataFile(object):
             for j in range(1, len(clause[i])):
                 a.append(EnAtom(str(clause[i][j])))
             n_clause.append(a)
-        return self._databaseEn.satisfy_clause(n_clause)
-        
+        return self._databaseEn.satisfy_clause_recursive(n_clause)
+
     def evaluateRuleEn(self, rule, example):
-        with open('log.txt', 'a+') as file:
-            file.write(str(rule) + '('+str(example)+')')
+        #with open('log.txt', 'a+') as file:
+        #    file.write(str(rule) + '('+str(example)+')')
         variables={}
         head = rule.get_literals()[0]
         #head_predicate = str(head.functor)
@@ -139,233 +139,4 @@ class DataFile(object):
             #clause_get = [EnPredicate(clause_predicate)]
             clause_get.extend(clause_args)
             rule_get.append(clause_get)
-        return self._databaseEn.satisfy_clause(rule_get, variables)
-
-""" Adicionado
-"""
-class EnPredicate(object):
-    def __init__(self, name):
-        self.name = name
-           
-    def __str__(self):
-        return self.name
-    
-    def __hash__(self):
-        return hash(self.name)
-    
-    def __eq__(self, other):
-        return str(self) == str(other)
-        
-class EnNot(object):
-    def __init__(self, child):
-        self.child = child
-           
-    def __str__(self):
-        return 'not('+str(self.child)+')'
-    
-#    def __hash__(self):
-#        return hash(self.name)
-    
-#    def __eq__(self, other):
-#        return str(self) == str(other)
-
-class EnAtom(object):
-    def __init__(self, name):
-        self.name = name
-        
-    def __str__(self):
-        return self.name
-    
-    def __hash__(self):
-        return hash(self.name)
-    
-    def __eq__(self, other):
-        return str(self) == str(other)
-    
-class EnVariable(object):
-    def __init__(self, name):
-        self.name = name
-        
-    def __str__(self):
-        return self.name
-    
-    def __int__(self):
-        return ord(self.name) - 65
-    
-    def __hash__(self):
-        return hash(self.name)
-    
-    def __eq__(self, other):
-        return str(self) == str(other)
-    
-class EnTuples(object):
-    def __init__(self):
-        self.data = {}
-        
-    def add(self, predicate, atoms):
-        if predicate not in self.data:
-            self.data[predicate] = {}
-        root = self.data[predicate]
-        for i in atoms:
-            if i in root:
-                root = root[i]
-            else:
-                root[i] = {}
-                root = root[i]
-       
-class EnStructure(object):
-    def __init__(self):
-        self.tuples = EnTuples()
-        self.predicates = {}
-        self.atoms = {}
-        self.bases = {}
-    
-    def add_base(self, relation, args):
-        if relation not in self.predicates:
-            self.bases[relation] = args
-            for arg in args:
-                if arg not in self.atoms:
-                    self.atoms[arg] = {}
-        
-    def add_tuple(self, relation, args):
-        atoms = []
-        bases = self.bases[relation]
-        for i in range(len(args)):
-            if args[i] not in self.atoms[bases[i]]:
-                self.atoms[bases[i]][args[i]] = EnAtom(args[i])
-            atoms.append(self.atoms[bases[i]][args[i]])
-        if relation not in self.predicates:
-            self.predicates[relation] = EnPredicate(relation)
-        self.tuples.add(self.predicates[relation], atoms)
-        
-    def count_tuples(self, target):
-        def recursive_count(root):
-            if len(root) == 0:
-                return 1
-            else:
-                s = 0
-                for tupl in root:
-                    s += recursive_count(root[tupl])
-                return s
-        tuples = self.tuples.data[target]
-        return recursive_count(tuples)
-    
-    def satisfy_clause(self, clause, variables={}):
-        def recursive(clause_pos, atom_pos, variables, root, values):
-            if atom_pos == 0: #it is a predicate
-                predicate = clause[clause_pos][0]
-                if type(predicate) == EnNot:
-                    return recursive(clause_pos, atom_pos+1, dict(variables), self.tuples.data[predicate.child], values)
-                else:
-                    return recursive(clause_pos, atom_pos+1, dict(variables), self.tuples.data[predicate], values)
-            else:
-                j = clause[clause_pos][atom_pos]
-                if type(j) == EnVariable and j in variables:
-                    j = variables[j]
-                if type(j) == EnAtom:
-                    if j not in root:
-                        if type(clause[clause_pos][0]) == EnNot:
-                            v = list(values)
-                            v.append(1.0)
-                            if clause_pos+1 == len(clause):
-                                s = 1.0
-                                for i in v:
-                                    s *= i
-                                return s
-                            return recursive(clause_pos+1, 0, dict(variables), root, v)
-                        else:
-                            return 0.0
-                    else:
-                        if atom_pos+1 == len(clause[clause_pos]):
-                            v = list(values)
-                            if type(clause[clause_pos][0]) == EnNot:
-                                return 0.0
-                            else:
-                                v.append(1.0)
-                            if clause_pos+1 == len(clause):
-                                s = 1.0
-                                for i in v:
-                                    s *= i
-                                return s
-                            else:
-                                return recursive(clause_pos+1, 0, dict(variables), root, v)
-                        else:
-                            return recursive(clause_pos, atom_pos+1, dict(variables), root[j], values)
-                elif type(j) == EnVariable: # new variable
-                    typ = self.bases[str(clause[clause_pos][0].child if type(clause[clause_pos][0]) == EnNot else clause[clause_pos][0])][atom_pos-1]
-                    found = 0.0
-                    for key, new_atom in self.atoms[typ].items():
-                        new_dict = dict(variables)
-                        new_dict[j] = new_atom
-                        found = recursive(clause_pos, atom_pos, new_dict, root, values)
-                        if found == 1.0:
-                            #with open('log.txt', 'a+') as file:
-                            #    file.write('teste\n')
-                            #    file.write(str(new_dict))
-                            break
-                    return found
-        return recursive(0, 0, variables, 0, [])
-    
-#    def satisfy_clause(self, clause, variables={}):
-#        def recursive(clause_pos, atom_pos, variables, root):
-#            if atom_pos == 0: #it is a predicate
-#                predicate = clause[clause_pos][0]
-#                if type(predicate) == EnNot:
-#                    it = 1.0 - recursive(clause_pos, atom_pos+1, dict(variables), self.tuples.data[predicate.child])
-#                else:
-#                    it = recursive(clause_pos, atom_pos+1, dict(variables), self.tuples.data[predicate])
-#                if clause_pos+1 == len(clause):
-#                    return it
-#                else:
-#                    return it * recursive(clause_pos+1, 0, dict(variables), root)
-#            else:
-#                j = clause[clause_pos][atom_pos]
-#                if type(j) == EnVariable and j in variables:
-#                    j = variables[j]
-#                if type(j) == EnAtom:
-#                    if j not in root:
-#                        return 0.0
-#                    else:
-#                        if atom_pos+1 == len(clause[clause_pos]):
-#                            #if clause_pos+1 == len(clause):
-#                            #    return 1.0
-#                            #else:
-#                            #    return recursive(clause_pos+1, 0, dict(variables), root)
-#                            return 1.0
-#                        else:
-#                            return recursive(clause_pos, atom_pos+1, dict(variables), root[j])
-#                elif type(j) == EnVariable: # new variable
-#                    typ = self.bases[str(clause[clause_pos][0].child if type(clause[clause_pos][0]) == EnNot else clause[clause_pos][0])][atom_pos-1]
-#                    found = 0.0
-#                    for key, new_atom in self.atoms[typ].items():
-#                        new_dict = dict(variables)
-#                        new_dict[j] = new_atom
-#                        found = recursive(clause_pos, atom_pos, new_dict, root)
-#                        if found == 1.0:
-#                            #with open('log.txt', 'a+') as file:
-#                            #    file.write('teste\n')
-#                            #    file.write(str(new_dict))
-#                            break
-#                    return found
-#        return recursive(0, 0, variables, 0)
-
-    def count_satisfy_rule(self, head, body):
-        self.trues = 0
-        def recursive(variables, root):
-            if len(root) == 0:
-                start(variables)
-            else:
-                for tupl in root:
-                    new_variables = list(variables)
-                    new_variables.append(tupl)
-                    recursive(new_variables, root[tupl])
-        def start(variables):
-            #lista2 = [str(x) for x in variables]
-            #print(lista2)
-            dict_variables = {head[x]:variables[x-1] for x in range(1, len(head))}
-            st = self.satisfy_clause(body, dict_variables)
-            if st == True:
-                self.trues += 1
-        tuples = self.tuples.data[head[0]]
-        recursive([], tuples)
-        return self.trues
+        return self._databaseEn.satisfy_clause_recursive(rule_get, variables)
