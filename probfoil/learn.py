@@ -156,7 +156,7 @@ class LearnEntail(object):
 #            with open('log.txt', 'a+') as file:
 #                file.write(str(example)+'\n')
             scores_predict[i] = self._data.evaluateRuleEn(rule, example)
-            #a = scores_predict[i]
+#            a = scores_predict[i]
 #            with open('log.txt', 'a+') as file:
 #                file.write(str(example)+'\n')
 #                if a == b:

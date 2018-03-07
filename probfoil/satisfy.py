@@ -137,6 +137,7 @@ class EnStructure(object):
                    if atom not in new_variables:
                        pred = clause[clause_pos][0] if type(clause[clause_pos][0]) != EnNot else clause[clause_pos][0].child
                        arg_type = self.bases[pred][atom_pos-1]
+                       #list_atoms = list(self.atoms[arg_type]) if atom_pos == 1 else list(pos)
                        list_atoms = list(self.atoms[arg_type])
                        new_variables[atom] = [clause_pos, atom_pos, 0, pos, list_atoms, len(list_atoms)] # clause_pos, atom_pos, atom_list_pos, tree_position, list, list_size
                        variables_order.append(atom)
