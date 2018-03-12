@@ -16,8 +16,8 @@ targets= ['athleteplaysinleague',
 'teamplayssport',
 'athleteplayssport']
 
-for target in targets:
-    for fold in range(1,6):
+for fold in range(1,6):
+    for target in targets:
         files = ['../rule_learning_experiment/probfoil/'+target+'/sports.settings', '../rule_learning_experiment/probfoil/'+target+'/sports_fold_'+str(fold)+'.data']
         probfoil(files=files, l=5, verbose=2, symmetry_breaking=True)
         
