@@ -2,7 +2,7 @@
 from problog.engine import DefaultEngine
 from problog.logic import Term, Var, Constant, Not
 from problog import get_evaluatable
-from .satisfy import *
+from satisfy import *
 
 class DataFile(object):
     """Represents a data file. This is a wrapper around a ProbLog file that offers direct
@@ -26,7 +26,7 @@ class DataFile(object):
                     base = str(clause.args[0].functor)
                     types = [str(x) for x in clause.args[0].args]
                     self._databaseEn.add_base(base, types)
-                elif predicate != 'target' and predicate != 'mode' and predicate != 'learn' and predicate != 'example_mode':
+                elif predicate not in ['option', 'target', 'mode', 'learn', 'example_mode']:
                     self._databaseEn.add_tuple(predicate, args)
 
     def query(self, functor, arity=None, arguments=None):

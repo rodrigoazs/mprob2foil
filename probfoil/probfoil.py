@@ -6,12 +6,12 @@
 from __future__ import print_function
 
 from problog.program import PrologFile
-from .data import DataFile
-from .language import TypeModeLanguage
+from data import DataFile
+from language import TypeModeLanguage
 from problog.util import init_logger
 from problog.logic import Term
-from .rule import FOILRule
-from .learn import CandidateBeam, LearnEntail
+from rule import FOILRule
+from learn import CandidateBeam, LearnEntail
 
 from logging import getLogger
 
@@ -20,7 +20,7 @@ import argparse
 import sys
 import random
 
-from .score import rates, accuracy, m_estimate_relative, precision, recall, m_estimate_future_relative, significance, pvalue2chisquare
+from score import rates, accuracy, m_estimate_relative, precision, recall, m_estimate_future_relative, significance, pvalue2chisquare
 
 
 class ProbFOIL(LearnEntail):
@@ -417,43 +417,66 @@ class ProbFOIL2(ProbFOIL):
             rule.max_fp = max_fp
         return max_score
 
-
-def main(argv=sys.argv[1:]):
-    args = argparser().parse_args(argv)
-
-    if args.seed:
-        seed = args.seed
+def probfoil(**kwargs):
+    args = kwargs
+    
+    if 'seed' in args:
+        seed = args['seed']
     else:
         seed = str(random.random())
+        args['seed'] = seed
     random.seed(seed)
 
     logger = 'probfoil'
 
-    if args.log is None:
+    if 'log' not in args:
+        args['log'] = None
         logfile = None
     else:
-        logfile = open(args.log, 'w')
+        logfile = open(args['log'], 'w')
+        
+    if 'verbose' not in args:
+        args['verbose'] = 0
+        
+    if 'm' not in args:
+        args['m'] = 1
+        
+    if 'beam_size' not in args:
+        args['beam_size'] = 5
+        
+    if 'p' not in args:
+        args['p'] = None
+        
+    if 'l' not in args:
+        args['l'] = None
+        
+    if 'target' not in args:
+        args['target'] = None
 
-    log = init_logger(verbose=args.verbose, name=logger, out=logfile)
+    if 'symmetry_breaking' not in args:
+        args['symmetry_breaking'] = False
+
+    log = init_logger(verbose=args['verbose'], name=logger, out=logfile)
 
     log.info('Random seed: %s' % seed)
 
     # Load input files
-    data = DataFile(*(PrologFile(source) for source in args.files))
+    data = DataFile(*(PrologFile(source) for source in args['files']))
 
-    if args.probfoil1:
+    if 'probfoil1' in args:
         learn_class = ProbFOIL
     else:
         learn_class = ProbFOIL2
 
     time_start = time.time()
-    learn = learn_class(data, logger=logger, **vars(args))
+    learn = learn_class(data, logger=logger, files=args['files'], seed = seed, log=args['log'], verbose=args['verbose'], m=args['m'], beam_size=args['beam_size'], p=args['p'], l=args['l'])
 
     hypothesis = learn.learn()
     time_total = time.time() - time_start
 
     print ('================ SETTINGS ================')
-    for kv in vars(args).items():
+    #for kv in vars(args).items():
+    for kv in args.items():
         print('%20s:\t%s' % kv)
 
     if learn.interrupted:
@@ -480,31 +503,94 @@ def main(argv=sys.argv[1:]):
 
     if logfile:
         logfile.close()
-
-
-def argparser():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('files', nargs='+')
-    parser.add_argument('-1', '--det-rules', action='store_true', dest='probfoil1',
-                        help='learn deterministic rules')
-    parser.add_argument('-m', help='parameter m for m-estimate', type=float,
-                        default=argparse.SUPPRESS)
-    parser.add_argument('-b', '--beam-size', type=int, default=5,
-                        help='size of beam for beam search')
-    parser.add_argument('-p', '--significance', type=float, default=None,
-                        help='rule significance threshold', dest='p')
-    parser.add_argument('-l', '--length', dest='l', type=int, default=None,
-                        help='maximum rule length')
-    parser.add_argument('-v', action='count', dest='verbose', default=None,
-                        help='increase verbosity (repeat for more)')
-    parser.add_argument('--symmetry-breaking', action='store_true',
-                        help='avoid symmetries in refinement operator')
-    parser.add_argument('--target', '-t', type=str,
-                        help='specify predicate/arity to learn (overrides settings file)')
-    parser.add_argument('-s', '--seed', help='random seed', default=None)
-    parser.add_argument('--log', help='write log to file', default=None)
-    return parser
-
-
-if __name__ == '__main__':
-    main()
+    
+#def main(argv=sys.argv[1:]):
+#    args = argparser().parse_args(argv)
+#
+#    if args.seed:
+#        seed = args.seed
+#    else:
+#        seed = str(random.random())
+#    random.seed(seed)
+#
+#    logger = 'probfoil'
+#
+#    if args.log is None:
+#        logfile = None
+#    else:
+#        logfile = open(args.log, 'w')
+#
+#    log = init_logger(verbose=args.verbose, name=logger, out=logfile)
+#
+#    log.info('Random seed: %s' % seed)
+#
+#    # Load input files
+#    data = DataFile(*(PrologFile(source) for source in args.files))
+#
+#    if args.probfoil1:
+#        learn_class = ProbFOIL
+#    else:
+#        learn_class = ProbFOIL2
+#
+#    time_start = time.time()
+#    learn = learn_class(data, logger=logger, **vars(args))
+#
+#    hypothesis = learn.learn()
+#    time_total = time.time() - time_start
+#
+#    print ('================ SETTINGS ================')
+#    for kv in vars(args).items():
+#        print('%20s:\t%s' % kv)
+#
+#    if learn.interrupted:
+#        print('================ PARTIAL THEORY ================')
+#    else:
+#        print('================= FINAL THEORY =================')
+#    rule = hypothesis
+#    rules = rule.to_clauses(rule.target.functor)
+#
+#    # First rule is failing rule: don't print it if there are other rules.
+#    if len(rules) > 1:
+#        for rule in rules[1:]:
+#            print (rule)
+#    else:
+#        print (rules[0])
+#    print ('==================== SCORES ====================')
+#    print ('            Accuracy:\t', accuracy(hypothesis))
+#    print ('           Precision:\t', precision(hypothesis))
+#    print ('              Recall:\t', recall(hypothesis))
+#    print ('================== STATISTICS ==================')
+#    for name, value in learn.statistics():
+#        print ('%20s:\t%s' % (name, value))
+#    print ('          Total time:\t%.4fs' % time_total)
+#
+#    if logfile:
+#        logfile.close()
+#
+#def argparser():
+#    parser = argparse.ArgumentParser()
+#    parser.add_argument('files', nargs='+')
+#    parser.add_argument('-1', '--det-rules', action='store_true', dest='probfoil1',
+#                        help='learn deterministic rules')
+#    parser.add_argument('-m', help='parameter m for m-estimate', type=float,
+#                        default=argparse.SUPPRESS)
+#    parser.add_argument('-b', '--beam-size', type=int, default=5,
+#                        help='size of beam for beam search')
+#    parser.add_argument('-p', '--significance', type=float, default=None,
+#                        help='rule significance threshold', dest='p')
+#    parser.add_argument('-l', '--length', dest='l', type=int, default=None,
+#                        help='maximum rule length')
+#    parser.add_argument('-v', action='count', dest='verbose', default=None,
+#                        help='increase verbosity (repeat for more)')
+#    parser.add_argument('--symmetry-breaking', action='store_true',
+#                        help='avoid symmetries in refinement operator')
+#    parser.add_argument('--target', '-t', type=str,
+#                        help='specify predicate/arity to learn (overrides settings file)')
+#    parser.add_argument('-s', '--seed', help='random seed', default=None)
+#    parser.add_argument('--log', help='write log to file', default=None)
+#
+#    return parser
+#
+#
+#if __name__ == '__main__':
+#    main()

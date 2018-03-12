@@ -53,7 +53,7 @@ class LearnEntail(object):
         :type data: DataFile
         """
         self.language.load(data)  # for types and modes
-
+        
         if self._target is None:
             try:
                 target = data.query('learn', 1)[0]
