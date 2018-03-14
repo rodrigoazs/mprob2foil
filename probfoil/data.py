@@ -27,7 +27,8 @@ class DataFile(object):
                     types = [str(x) for x in clause.args[0].args]
                     self._databaseEn.add_base(base, types)
                 elif predicate not in ['option', 'target', 'mode', 'learn', 'example_mode']:
-                    self._databaseEn.add_tuple(predicate, args)
+                    if clause.probability == None or float(clause.probability) != 0.0:
+                        self._databaseEn.add_tuple(predicate, args)
 
     def query(self, functor, arity=None, arguments=None):
         """Perform a query on the data.

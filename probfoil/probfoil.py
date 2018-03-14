@@ -5,7 +5,7 @@
 
 from __future__ import print_function
 
-from problog.program import PrologFile
+from problog.program import PrologFile, PrologString
 from data import DataFile
 from language import TypeModeLanguage
 from problog.util import init_logger
@@ -46,6 +46,13 @@ class ProbFOIL(LearnEntail):
         self._stats_evaluations = 0
         self._max_length = l
 
+    def test_rule(self, hypothesis):
+        #current_rule = FOILRule(target=self.target, previous=hypothesis, correct=self._scores_correct)
+        hypothesis.correct = self._scores_correct
+        hypothesis.scores = self._compute_scores_predict(hypothesis)
+        hypothesis.score = self._compute_rule_score(hypothesis)
+        return hypothesis
+        
     def best_rule(self, current):
         """Find the best rule to extend the current rule set.
 
@@ -454,30 +461,69 @@ def probfoil(**kwargs):
         args['target'] = None
 
     if 'symmetry_breaking' not in args:
-        args['symmetry_breaking'] = False
+        args['symmetry_breaking'] = True
+            
+    if 'settings' in args:
+        settings = args['settings']
+        del args['settings']
+    else:
+        settings = None
+        
+    if 'train' in args:
+        train = args['train']
+        del args['train']
+    else:
+        train = None
+        
+    if 'test' in args:
+        test = args['test']
+        del args['test']
+    else:
+        test = None
+    
+        
+    #settings = args['settings']
+    #train = args['train']
 
     log = init_logger(verbose=args['verbose'], name=logger, out=logfile)
 
     log.info('Random seed: %s' % seed)
-
+    
     # Load input files
-    data = DataFile(*(PrologFile(source) for source in args['files']))
-
+    #data = DataFile(*(PrologFile(source) for source in args['files']))
+    data = DataFile(*(PrologString(source) for source in [settings , train]))
+    
     if 'probfoil1' in args:
         learn_class = ProbFOIL
     else:
         learn_class = ProbFOIL2
 
     time_start = time.time()
-    learn = learn_class(data, logger=logger, files=args['files'], seed = seed, log=args['log'], verbose=args['verbose'], m=args['m'], beam_size=args['beam_size'], p=args['p'], l=args['l'])
+    learn = learn_class(data, logger=logger, seed = seed, log=args['log'], verbose=args['verbose'], m=args['m'], beam_size=args['beam_size'], p=args['p'], l=args['l'])
 
     hypothesis = learn.learn()
     time_total = time.time() - time_start
+    
+    # Store scores
+    train_accuracy = accuracy(hypothesis)
+    train_precision = precision(hypothesis)
+    train_recall = recall(hypothesis)
+    
+    # Load test data
+    if test != None:
+        test_data = DataFile(*(PrologString(source) for source in [settings, test]))
+        test = learn_class(test_data, logger=logger, seed = seed, log=args['log'], verbose=args['verbose'], m=args['m'], beam_size=args['beam_size'], p=args['p'], l=args['l'])
+        test_hypothesis = test.test_rule(hypothesis)
+        
+        # Store scores
+        test_accuracy = accuracy(test_hypothesis)
+        test_precision = precision(test_hypothesis)
+        test_recall = recall(test_hypothesis)
 
     print ('================ SETTINGS ================')
     #for kv in vars(args).items():
     for kv in args.items():
-        print('%20s:\t%s' % kv)
+            print('%20s:\t%s' % kv)
 
     if learn.interrupted:
         print('================ PARTIAL THEORY ================')
@@ -492,10 +538,17 @@ def probfoil(**kwargs):
             print (rule)
     else:
         print (rules[0])
+
     print ('==================== SCORES ====================')
-    print ('            Accuracy:\t', accuracy(hypothesis))
-    print ('           Precision:\t', precision(hypothesis))
-    print ('              Recall:\t', recall(hypothesis))
+    print ('            Train Set')
+    print ('             Accuracy:\t', train_accuracy)
+    print ('            Precision:\t', train_precision)
+    print ('               Recall:\t', train_recall)
+    if test != None:
+        print ('             Test Set')
+        print ('             Accuracy:\t', test_accuracy)
+        print ('            Precision:\t', test_precision)
+        print ('               Recall:\t', test_recall)    
     print ('================== STATISTICS ==================')
     for name, value in learn.statistics():
         print ('%20s:\t%s' % (name, value))
