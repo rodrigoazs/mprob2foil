@@ -49,7 +49,7 @@ class ProbFOIL(LearnEntail):
     def test_rule(self, hypothesis):
         #current_rule = FOILRule(target=self.target, previous=hypothesis, correct=self._scores_correct)
         hypothesis.correct = self._scores_correct
-        hypothesis.scores = self._compute_scores_predict(hypothesis)
+        hypothesis.scores = self._compute_scores_predict_test(hypothesis)
         hypothesis.score = self._compute_rule_score(hypothesis)
         return hypothesis
         

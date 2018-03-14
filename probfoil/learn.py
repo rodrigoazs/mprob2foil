@@ -121,7 +121,43 @@ class LearnEntail(object):
 
     def _compute_scores_predict(self, rule):
         return self._compute_scores_predict_ground(rule)
+    
+    def _compute_scores_predict_test(self, rule):
+        functor = 'eval_rule'
 
+        to_eval = set(range(0, len(self.examples)))
+        examples = [self.examples[i] for i in to_eval]
+        # print (len(set_zero), len(set_one))
+
+        # message = ''
+        # for ex in examples:
+        #     message += str(Term('query', Term(functor, *ex))) + '.\n'
+        # message += '\n'.join(map(str, rule.to_clauses(functor))) + '\n'
+
+        # Call ProbLog
+        #result = self._data.evaluate(rule, functor=functor, arguments=examples)
+        
+        # Extract results
+#        with open('log.txt', 'a+') as file:
+#            file.write('_compute_scores_predict_ground\n')
+#            file.write('rule='+str(rule)+'\n')
+        scores_predict = [0.0] * len(self.examples)
+        for i, example in zip(to_eval, examples):
+            #scores_predict[i] = result.get(Term(functor, *example), 0.0)
+            #b = self._data.evaluateRuleEn(rule, example)
+#            with open('log.txt', 'a+') as file:
+#                file.write(str(example)+'\n')
+            scores_predict[i] = self._data.evaluateRuleEn(rule, example)
+#            a = scores_predict[i]
+#            with open('log.txt', 'a+') as file:
+#                file.write(str(example)+'\n')
+#                if a == b:
+#                    file.write('CORRECT ' + str(a) +' = ' +str(b)+'\n')
+#                else:
+#                    file.write('INCORRECT ' + str(a) +' != ' +str(b)+'\n')
+
+        return scores_predict
+    
     def _compute_scores_predict_ground(self, rule):
         functor = 'eval_rule'
 
