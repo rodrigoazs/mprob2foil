@@ -1,0 +1,374 @@
+================ SETTINGS ================
+               files:	['../rule_learning_experiment/probfoil/athleteplaysinleague/sports.settings', '../rule_learning_experiment/probfoil/athleteplaysinleague/sports_fold_1.data']
+                 log:	None
+                   m:	1
+                   l:	5
+                   p:	None
+           beam_size:	5
+                seed:	0.744267931322
+              target:	None
+   symmetry_breaking:	True
+             verbose:	0
+================= FINAL THEORY =================
+athleteplaysinleague(A,B) :- athleteledsportsteam(A,C), teamplaysinleague(C,B)
+athleteplaysinleague(A,B) :- teamplaysinleague(C,B), athleteplaysforteam(A,C), athleteplayssport(A,D)
+athleteplaysinleague(A,B) :- teamplaysinleague(C,B), teamalsoknownas(D,C), athleteledsportsteam(E,D), athleteplayssport(A,F)
+athleteplaysinleague(A,B) :- teamplaysinleague(C,B), teamalsoknownas(D,C), athleteledsportsteam(E,D)
+athleteplaysinleague(A,B) :- teamplaysinleague(C,B), athleteplaysforteam(A,C)
+==================== SCORES ====================
+            Accuracy:	 0.845454545455
+           Precision:	 0.845454545455
+              Recall:	 0.845454545455
+================== STATISTICS ==================
+    Rule evaluations:	1001
+          Total time:	12983.6455s
+================ SETTINGS ================
+               files:	['../rule_learning_experiment/probfoil/teamplaysinleague/sports.settings', '../rule_learning_experiment/probfoil/teamplaysinleague/sports_fold_1.data']
+                 log:	None
+                   m:	1
+                   l:	5
+                   p:	None
+           beam_size:	5
+                seed:	0.125631452208
+              target:	None
+   symmetry_breaking:	True
+             verbose:	0
+================= FINAL THEORY =================
+teamplaysinleague(A,B) :- athleteplaysinleague(C,B), athleteledsportsteam(C,D), teamalsoknownas(A,D)
+teamplaysinleague(A,B) :- athleteplaysinleague(C,B), athleteledsportsteam(C,D), teamalsoknownas(D,A)
+teamplaysinleague(A,B) :- athleteplaysinleague(C,B), athleteplaysforteam(C,A)
+teamplaysinleague(A,B) :- athleteplaysinleague(C,B), athleteplaysforteam(C,D), teamalsoknownas(D,A), teamplaysagainstteam(A,D)
+teamplaysinleague(A,B) :- athleteplaysinleague(C,B), athleteledsportsteam(C,D), teamalsoknownas(D,E), teamplaysagainstteam(D,A)
+teamplaysinleague(A,B) :- athleteplaysinleague(C,B)
+==================== SCORES ====================
+            Accuracy:	 0.720833333333
+           Precision:	 0.66
+              Recall:	 0.939024390244
+================== STATISTICS ==================
+    Rule evaluations:	1549
+          Total time:	15385.7965s
+================ SETTINGS ================
+               files:	['../rule_learning_experiment/probfoil/athleteplaysforteam/sports.settings', '../rule_learning_experiment/probfoil/athleteplaysforteam/sports_fold_1.data']
+                 log:	None
+                   m:	1
+                   l:	5
+                   p:	None
+           beam_size:	5
+                seed:	0.152548462173
+              target:	None
+   symmetry_breaking:	True
+             verbose:	0
+================= FINAL THEORY =================
+athleteplaysforteam(A,B) :- teamalsoknownas(B,C), athleteledsportsteam(D,B), teamplaysagainstteam(C,B)
+athleteplaysforteam(A,B) :- athleteledsportsteam(A,C), teamplaysagainstteam(D,B), athleteledsportsteam(E,D), athleteplaysinleague(E,F)
+athleteplaysforteam(A,B) :- teamalsoknownas(B,C), teamplaysinleague(C,D), teamplaysinleague(B,D), teamalsoknownas(C,E)
+athleteplaysforteam(A,B) :- teamplaysinleague(B,C), athleteplaysinleague(A,C), athleteledsportsteam(D,B), teamplaysagainstteam(B,E)
+athleteplaysforteam(A,B) :- teamplaysagainstteam(C,B), teamalsoknownas(B,C)
+athleteplaysforteam(A,B) :- teamplaysagainstteam(B,C), teamalsoknownas(D,C), teamplaysagainstteam(B,D), teamplayssport(B,E)
+athleteplaysforteam(A,B) :- athleteledsportsteam(C,B), teamplaysagainstteam(B,D), teamalsoknownas(D,E)
+athleteplaysforteam(A,B) :- teamplaysagainstteam(B,C), teamplaysagainstteam(D,B), athleteledsportsteam(E,D), athleteplaysinleague(E,F)
+==================== SCORES ====================
+            Accuracy:	 0.94375
+           Precision:	 0.922619047619
+              Recall:	 0.96875
+================== STATISTICS ==================
+    Rule evaluations:	1761
+          Total time:	1324.9891s
+================ SETTINGS ================
+               files:	['../rule_learning_experiment/probfoil/teamalsoknownas/sports.settings', '../rule_learning_experiment/probfoil/teamalsoknownas/sports_fold_1.data']
+                 log:	None
+                   m:	1
+                   l:	5
+                   p:	None
+           beam_size:	5
+                seed:	0.355058701491
+              target:	None
+   symmetry_breaking:	True
+             verbose:	0
+================= FINAL THEORY =================
+teamalsoknownas(A,B) :- teamplaysagainstteam(C,A), teamplayssport(B,D)
+teamalsoknownas(A,B) :- teamplayssport(A,C)
+==================== SCORES ====================
+            Accuracy:	 0.863636363636
+           Precision:	 0.875
+              Recall:	 0.848484848485
+================== STATISTICS ==================
+    Rule evaluations:	259
+          Total time:	62.1172s
+================ SETTINGS ================
+               files:	['../rule_learning_experiment/probfoil/athleteledsportsteam/sports.settings', '../rule_learning_experiment/probfoil/athleteledsportsteam/sports_fold_1.data']
+                 log:	None
+                   m:	1
+                   l:	5
+                   p:	None
+           beam_size:	5
+                seed:	0.0429154016488
+              target:	None
+   symmetry_breaking:	True
+             verbose:	0
+================= FINAL THEORY =================
+athleteledsportsteam(A,B) :- athleteplaysforteam(A,B)
+athleteledsportsteam(A,B) :- teamplaysagainstteam(B,C), teamplaysinleague(C,D), athleteplaysinleague(A,D), teamplaysinleague(B,D)
+athleteledsportsteam(A,B) :- teamalsoknownas(B,C), teamplaysagainstteam(B,D)
+athleteledsportsteam(A,B) :- athleteplaysforteam(A,C), teamplaysagainstteam(B,D), teamplaysinleague(D,E), teamplaysinleague(B,E)
+athleteledsportsteam(A,B) :- teamplaysinleague(B,C), athleteplaysinleague(A,C)
+==================== SCORES ====================
+            Accuracy:	 0.991071428571
+           Precision:	 1.0
+              Recall:	 0.982142857143
+================== STATISTICS ==================
+    Rule evaluations:	1030
+          Total time:	195.7810s
+================ SETTINGS ================
+               files:	['../rule_learning_experiment/probfoil/teamplaysagainstteam/sports.settings', '../rule_learning_experiment/probfoil/teamplaysagainstteam/sports_fold_1.data']
+                 log:	None
+                   m:	1
+                   l:	5
+                   p:	None
+           beam_size:	5
+                seed:	0.842418116665
+              target:	None
+   symmetry_breaking:	True
+             verbose:	0
+================= FINAL THEORY =================
+teamplaysagainstteam(A,B) :- athleteledsportsteam(C,A), athleteledsportsteam(D,B), teamplayssport(B,E), teamplayssport(A,E)
+teamplaysagainstteam(A,B) :- athleteplaysforteam(C,A), athleteplaysforteam(D,B), teamalsoknownas(E,A)
+teamplaysagainstteam(A,B) :- teamalsoknownas(A,C), teamplayssport(B,D), teamplayssport(C,D)
+teamplaysagainstteam(A,B) :- athleteledsportsteam(C,B), teamplayssport(A,D), teamplayssport(B,D)
+teamplaysagainstteam(A,B) :- teamalsoknownas(B,C), teamalsoknownas(A,C)
+teamplaysagainstteam(A,B) :- athleteplaysforteam(C,B), teamplayssport(A,D), teamplayssport(B,D)
+teamplaysagainstteam(A,B) :- athleteplaysforteam(C,B), teamalsoknownas(D,B), teamalsoknownas(B,D), athleteledsportsteam(C,B)
+teamplaysagainstteam(A,B) :- athleteplaysforteam(C,B), athleteledsportsteam(D,A), teamplayssport(A,E), teamplayssport(B,F)
+teamplaysagainstteam(A,B) :- teamplayssport(B,C), teamplayssport(A,C)
+teamplaysagainstteam(A,B) :- athleteplaysforteam(C,B), teamalsoknownas(D,B), teamalsoknownas(B,D), athleteledsportsteam(E,D)
+teamplaysagainstteam(A,B) :- athleteledsportsteam(C,B), teamplayssport(A,D)
+teamplaysagainstteam(A,B) :- athleteplaysforteam(C,A), teamalsoknownas(A,D), teamalsoknownas(D,A), teamplayssport(B,E)
+teamplaysagainstteam(A,B) :- teamplayssport(A,C), teamplayssport(B,D)
+teamplaysagainstteam(A,B) :- athleteplaysforteam(C,B), teamplayssport(A,D)
+==================== SCORES ====================
+            Accuracy:	 0.951834862385
+           Precision:	 0.933920704846
+              Recall:	 0.97247706422
+================== STATISTICS ==================
+    Rule evaluations:	2299
+          Total time:	3503.9487s
+================ SETTINGS ================
+               files:	['../rule_learning_experiment/probfoil/teamplayssport/sports.settings', '../rule_learning_experiment/probfoil/teamplayssport/sports_fold_1.data']
+                 log:	None
+                   m:	1
+                   l:	5
+                   p:	None
+           beam_size:	5
+                seed:	0.839410929814
+              target:	None
+   symmetry_breaking:	True
+             verbose:	0
+================= FINAL THEORY =================
+teamplayssport(A,B) :- teamalsoknownas(A,C), teamplaysagainstteam(A,D)
+teamplayssport(A,B) :- teamplaysagainstteam(C,A), athleteledsportsteam(D,C), athleteplaysforteam(D,A)
+teamplayssport(A,B) :- teamalsoknownas(C,A), teamalsoknownas(A,C)
+teamplayssport(A,B) :- teamplaysinleague(A,C), teamplaysagainstteam(A,D), teamplaysinleague(D,C), teamalsoknownas(D,E)
+teamplayssport(A,B) :- teamplaysinleague(A,C), teamalsoknownas(D,A)
+teamplayssport(A,B) :- teamplaysinleague(A,C), teamplaysagainstteam(D,A), teamplaysinleague(D,C), teamalsoknownas(E,D)
+teamplayssport(A,B) :- teamplaysinleague(A,C), teamplaysagainstteam(A,D), teamalsoknownas(D,E), teamplaysagainstteam(A,E)
+teamplayssport(A,B) :- teamplaysinleague(A,C), athleteledsportsteam(D,A), athleteplaysinleague(D,C)
+teamplayssport(A,B) :- athleteplaysforteam(C,A)
+==================== SCORES ====================
+            Accuracy:	 0.769841269841
+           Precision:	 0.84
+              Recall:	 0.666666666667
+================== STATISTICS ==================
+    Rule evaluations:	1648
+          Total time:	453.7356s
+================ SETTINGS ================
+               files:	['../rule_learning_experiment/probfoil/athleteplayssport/sports.settings', '../rule_learning_experiment/probfoil/athleteplayssport/sports_fold_1.data']
+                 log:	None
+                   m:	1
+                   l:	5
+                   p:	None
+           beam_size:	5
+                seed:	0.558828727185
+              target:	None
+   symmetry_breaking:	True
+             verbose:	0
+================= FINAL THEORY =================
+athleteplayssport(A,B) :- athleteplaysforteam(A,C), teamplaysagainstteam(D,C), athleteledsportsteam(A,D)
+==================== SCORES ====================
+            Accuracy:	 0.503816793893
+           Precision:	 1.0
+              Recall:	 0.010152284264
+================== STATISTICS ==================
+    Rule evaluations:	364
+          Total time:	3097.6038s
+================ SETTINGS ================
+               files:	['../rule_learning_experiment/probfoil/athleteplaysinleague/sports.settings', '../rule_learning_experiment/probfoil/athleteplaysinleague/sports_fold_2.data']
+                 log:	None
+                   m:	1
+                   l:	5
+                   p:	None
+           beam_size:	5
+                seed:	0.0460848803349
+              target:	None
+   symmetry_breaking:	True
+             verbose:	0
+================= FINAL THEORY =================
+athleteplaysinleague(A,B) :- athleteplaysforteam(A,C), teamplaysinleague(C,B), teamalsoknownas(D,C), athleteplayssport(A,E)
+athleteplaysinleague(A,B) :- athleteplaysforteam(A,C), teamplaysinleague(C,B), athleteledsportsteam(A,D), teamplaysinleague(D,B)
+athleteplaysinleague(A,B) :- athleteplaysforteam(A,C), teamplaysinleague(C,B), athleteplayssport(A,D)
+athleteplaysinleague(A,B) :- athleteledsportsteam(A,C), teamplaysinleague(C,B), teamplayssport(C,D)
+athleteplaysinleague(A,B) :- athleteplaysforteam(A,C), teamplaysinleague(C,B), teamalsoknownas(C,D)
+==================== SCORES ====================
+            Accuracy:	 0.651020408163
+           Precision:	 0.975
+              Recall:	 0.315789473684
+================== STATISTICS ==================
+    Rule evaluations:	971
+          Total time:	436.1772s
+================ SETTINGS ================
+               files:	['../rule_learning_experiment/probfoil/teamplaysinleague/sports.settings', '../rule_learning_experiment/probfoil/teamplaysinleague/sports_fold_2.data']
+                 log:	None
+                   m:	1
+                   l:	5
+                   p:	None
+           beam_size:	5
+                seed:	0.872582728929
+              target:	None
+   symmetry_breaking:	True
+             verbose:	0
+================= FINAL THEORY =================
+teamplaysinleague(A,B) :- athleteplaysinleague(C,B), athleteplaysforteam(C,A), athleteledsportsteam(C,A), athleteplayssport(C,D)
+teamplaysinleague(A,B) :- athleteplaysinleague(C,B), athleteplaysforteam(C,A), teamalsoknownas(D,A)
+teamplaysinleague(A,B) :- athleteplaysinleague(C,B), athleteledsportsteam(C,A)
+teamplaysinleague(A,B) :- athleteplaysinleague(C,B), athleteplaysforteam(C,A)
+teamplaysinleague(A,B) :- athleteplaysinleague(C,B)
+==================== SCORES ====================
+            Accuracy:	 0.670731707317
+           Precision:	 0.614973262032
+              Recall:	 0.927419354839
+================== STATISTICS ==================
+    Rule evaluations:	757
+          Total time:	3890.7358s
+================ SETTINGS ================
+               files:	['../rule_learning_experiment/probfoil/athleteplaysforteam/sports.settings', '../rule_learning_experiment/probfoil/athleteplaysforteam/sports_fold_2.data']
+                 log:	None
+                   m:	1
+                   l:	5
+                   p:	None
+           beam_size:	5
+                seed:	0.0970712459052
+              target:	None
+   symmetry_breaking:	True
+             verbose:	0
+================= FINAL THEORY =================
+athleteplaysforteam(A,B) :- teamalsoknownas(B,C), teamplaysinleague(C,D), teamalsoknownas(E,B), athleteledsportsteam(F,B)
+athleteplaysforteam(A,B) :- athleteledsportsteam(A,B)
+athleteplaysforteam(A,B) :- teamalsoknownas(B,C), athleteledsportsteam(D,B)
+athleteplaysforteam(A,B) :- athleteledsportsteam(C,B), athleteplaysinleague(C,D), athleteplaysinleague(A,D)
+athleteplaysforteam(A,B) :- teamalsoknownas(B,C), teamplaysagainstteam(B,D)
+athleteplaysforteam(A,B) :- athleteledsportsteam(A,C), teamplaysagainstteam(B,D)
+athleteplaysforteam(A,B) :- teamplaysagainstteam(B,C), teamalsoknownas(D,C), teamplaysagainstteam(B,D)
+athleteplaysforteam(A,B) :- athleteledsportsteam(C,B), athleteplaysinleague(C,D)
+athleteplaysforteam(A,B) :- teamplaysagainstteam(B,C), teamalsoknownas(C,D), athleteledsportsteam(E,C), teamplayssport(B,F)
+==================== SCORES ====================
+            Accuracy:	 0.939759036145
+           Precision:	 0.929411764706
+              Recall:	 0.951807228916
+================== STATISTICS ==================
+    Rule evaluations:	2012
+          Total time:	641.6958s
+================ SETTINGS ================
+               files:	['../rule_learning_experiment/probfoil/teamalsoknownas/sports.settings', '../rule_learning_experiment/probfoil/teamalsoknownas/sports_fold_2.data']
+                 log:	None
+                   m:	1
+                   l:	5
+                   p:	None
+           beam_size:	5
+                seed:	0.351330902883
+              target:	None
+   symmetry_breaking:	True
+             verbose:	0
+================= FINAL THEORY =================
+teamalsoknownas(A,B) :- teamplaysagainstteam(A,C), teamplaysagainstteam(C,B)
+teamalsoknownas(A,B) :- teamplayssport(A,C), teamplayssport(B,C)
+teamalsoknownas(A,B) :- teamplayssport(A,C)
+==================== SCORES ====================
+            Accuracy:	 0.777777777778
+           Precision:	 0.8
+              Recall:	 0.740740740741
+================== STATISTICS ==================
+    Rule evaluations:	368
+          Total time:	46.9503s
+================ SETTINGS ================
+               files:	['../rule_learning_experiment/probfoil/athleteledsportsteam/sports.settings', '../rule_learning_experiment/probfoil/athleteledsportsteam/sports_fold_2.data']
+                 log:	None
+                   m:	1
+                   l:	5
+                   p:	None
+           beam_size:	5
+                seed:	0.0448474381105
+              target:	None
+   symmetry_breaking:	True
+             verbose:	0
+================= FINAL THEORY =================
+athleteledsportsteam(A,B) :- athleteplaysforteam(A,B)
+athleteledsportsteam(A,B) :- teamplaysagainstteam(C,B), athleteplaysforteam(A,C), teamplayssport(C,D)
+athleteledsportsteam(A,B) :- athleteplaysforteam(C,B), athleteplaysinleague(C,D), athleteplaysinleague(A,D), teamplaysinleague(B,D)
+athleteledsportsteam(A,B) :- athleteplaysforteam(C,B), teamalsoknownas(B,D)
+athleteledsportsteam(A,B) :- athleteplaysforteam(A,C), athleteplaysforteam(D,B), athleteplayssport(A,E)
+athleteledsportsteam(A,B) :- athleteplaysforteam(A,C), teamplaysagainstteam(D,B), teamalsoknownas(E,D), teamplayssport(C,F)
+athleteledsportsteam(A,B) :- athleteplaysinleague(A,C), teamplaysinleague(B,C)
+athleteledsportsteam(A,B) :- athleteplaysforteam(A,C), teamplaysinleague(C,D), teamplaysinleague(B,D)
+==================== SCORES ====================
+            Accuracy:	 0.957627118644
+           Precision:	 0.921875
+              Recall:	 1.0
+================== STATISTICS ==================
+    Rule evaluations:	1387
+          Total time:	238.8524s
+================ SETTINGS ================
+               files:	['../rule_learning_experiment/probfoil/teamplaysagainstteam/sports.settings', '../rule_learning_experiment/probfoil/teamplaysagainstteam/sports_fold_2.data']
+                 log:	None
+                   m:	1
+                   l:	5
+                   p:	None
+           beam_size:	5
+                seed:	0.607158777966
+              target:	None
+   symmetry_breaking:	True
+             verbose:	0
+================= FINAL THEORY =================
+teamplaysagainstteam(A,B) :- athleteplaysforteam(C,A), teamalsoknownas(B,D), teamplaysinleague(D,E), teamplaysinleague(A,E)
+teamplaysagainstteam(A,B) :- athleteledsportsteam(C,A), teamplayssport(B,D), teamplayssport(A,D)
+teamplaysagainstteam(A,B) :- athleteplaysforteam(C,B), teamalsoknownas(A,D), athleteledsportsteam(E,D), athleteplayssport(C,F)
+teamplaysagainstteam(A,B) :- athleteplaysforteam(C,B), teamplayssport(A,D), teamplayssport(B,D), athleteplayssport(C,E)
+teamplaysagainstteam(A,B) :- athleteplaysforteam(C,A), teamplayssport(B,D), teamplayssport(A,D)
+teamplaysagainstteam(A,B) :- athleteplaysforteam(C,A), athleteplaysforteam(D,B), athleteledsportsteam(E,B)
+teamplaysagainstteam(A,B) :- athleteplaysforteam(C,B), athleteledsportsteam(D,A)
+teamplaysagainstteam(A,B) :- athleteledsportsteam(C,A), athleteledsportsteam(D,B)
+teamplaysagainstteam(A,B) :- teamalsoknownas(A,C), teamalsoknownas(B,C), teamalsoknownas(D,A)
+teamplaysagainstteam(A,B) :- athleteplaysforteam(C,A), athleteplaysforteam(D,B)
+teamplaysagainstteam(A,B) :- athleteledsportsteam(C,A), teamplayssport(B,D)
+teamplaysagainstteam(A,B) :- athleteledsportsteam(C,B), teamplayssport(A,D), teamplayssport(B,D)
+==================== SCORES ====================
+            Accuracy:	 0.96853625171
+           Precision:	 0.979020979021
+              Recall:	 0.957592339261
+================== STATISTICS ==================
+    Rule evaluations:	2089
+          Total time:	12426.7064s
+================ SETTINGS ================
+               files:	['../rule_learning_experiment/probfoil/teamplayssport/sports.settings', '../rule_learning_experiment/probfoil/teamplayssport/sports_fold_2.data']
+                 log:	None
+                   m:	1
+                   l:	5
+                   p:	None
+           beam_size:	5
+                seed:	0.884837666122
+              target:	None
+   symmetry_breaking:	True
+             verbose:	0
+================= FINAL THEORY =================
+teamplayssport(A,B) :- teamalsoknownas(C,A), athleteledsportsteam(D,A)
+teamplayssport(A,B) :- athleteplaysforteam(C,A), athleteledsportsteam(C,D), teamalsoknownas(D,E), teamplaysagainstteam(E,A)
+teamplayssport(A,B) :- teamplaysagainstteam(C,A), athleteplaysforteam(D,C), athleteledsportsteam(D,A)
+teamplayssport(A,B) :- teampla
