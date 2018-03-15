@@ -77,8 +77,9 @@ def get_data(dataset, n_folds, target, target_parity, allow_negation=True, examp
         settings += 'option(negation,off).\n'
     settings += '\n'
     settings += 'learn('+target+'/'+str(target_parity)+').\n'
-    settings += '\n'
-    settings += 'example_mode('+ example_mode +').\n'
+    if example_mode != 'incode':
+        settings += '\n'
+        settings += 'example_mode('+ example_mode +').\n'
     settings += '\n'
     
     for key, value in relations.items():
@@ -87,26 +88,35 @@ def get_data(dataset, n_folds, target, target_parity, allow_negation=True, examp
                 base += str(d[3])[:6]+'::' +str(d[1]) + '(' +str(d[0])+ ','+str(d[2])+ ').\n'
 
     tar = relations[target]
-    random.shuffle(tar)
-    tar = create_folds(tar, n_folds)         
+    ntar = []
+    tuples = {}
+    all_objects = set()
+    for d in tar:
+        s = str(d[0])
+        o = str(d[2])
+        if s not in tuples:
+            tuples[s] = set([o])
+        else:
+            tuples[s].add(o)
+        all_objects.add(o)
+    for d in tar:
+        rand_objects = all_objects.difference(tuples[str(d[0])])
+        ntar.append([d, str(random.choice(list(rand_objects)))])
+    
+    #random.shuffle(tar)
+    #tar = create_folds(tar, n_folds)   
+    random.shuffle(ntar)
+    tar = create_folds(ntar, n_folds)      
     
     for i in range(n_folds):
-        tuples = {}
-        all_objects = set()
-        for d in tar[i]:
-            s = str(d[0])
-            o = str(d[2])
-            if s not in tuples:
-                tuples[s] = set([o])
-            else:
-                tuples[s].add(o)
-            all_objects.add(o)
-
         # print positive and negative targets
-        for d in tar[i]:
+        for g in tar[i]:
+            d = g[0]
             folds[i] += str(d[3])[:6]+'::' +str(d[1]) + '(' +str(d[0])+ ','+str(d[2])+ ').\n'
             #rand_objects = all_objects.difference(tuples[str(d[0])])
             #folds[i] += '0.0::'+str(d[1]) + '(' +str(d[0])+ ','+str(random.choice(list(rand_objects)))+ ').\n'
+            if example_mode == 'incode':
+                folds[i] += '0.0::'+str(d[1]) + '(' +str(d[0])+ ','+ g[1] + ').\n'
             
     return {'settings': settings, 'base': base, 'folds': folds}
 
